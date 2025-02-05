@@ -1,0 +1,6 @@
+{
+    "watch" : ["src"],
+    "ext": "ts",
+    "exec": "npm run compile && node ./dist/server.js"   
+}
+
