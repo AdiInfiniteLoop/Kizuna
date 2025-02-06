@@ -5,11 +5,11 @@ import User, { UserInterface } from "../models/userModel.models";
 import { generateJWT } from "../utils/generateJWT.utils";
 import cloudinary from "../lib/cloudinary.lib";
 
-interface NRequest extends Request{
+export interface NRequest extends Request{
     user: UserInterface
 }
 
-export const signup =  catchAsync(async(req: Request, res: Response, next: NextFunction) => {
+export const signup =  catchAsync(async(req: NRequest, res: Response, next: NextFunction) => {
     const {fullName, email, password} = req.body;
     if(!fullName || !email || !password) next(new ErrorClass('A fields must be filled', 400))
     try {
@@ -51,7 +51,7 @@ export const signup =  catchAsync(async(req: Request, res: Response, next: NextF
 })
 
 
-export const login =  catchAsync(async(req: Request, res: Response, next: NextFunction) => {
+export const login =  catchAsync(async(req: NRequest, res: Response, next: NextFunction) => {
     const {fullName, email, password} = req.body;
     if(!fullName || !email || !password) next(new ErrorClass('A fields must be filled', 400))
     try {
@@ -89,7 +89,7 @@ export const login =  catchAsync(async(req: Request, res: Response, next: NextFu
     next()
 })
 
-export const logout =  catchAsync(async(req: Request, res: Response, next: NextFunction) => {
+export const logout =  catchAsync(async(req: NRequest, res: Response, next: NextFunction) => {
     //clear cookies
     try {
         res.cookie("jwt","", {maxAge:0});
