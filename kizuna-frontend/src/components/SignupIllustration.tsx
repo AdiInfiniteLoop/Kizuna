@@ -11,7 +11,7 @@ const SignupIllustration: React.FC<SignupIllustrationInterface>= ({ title, subti
             {[...Array(25)].map((_, i) => (
               <div
                 key={i}
-                className={`aspect-square rounded-2xl bg-primary/10 hover:bg-white  ${
+                className={`aspect-square rounded-2xl bg-primary/10 hover:bg-gray-100  ${
                   i % 2 === 0 ? "animate-pulse" : ""
                 }`}
               />

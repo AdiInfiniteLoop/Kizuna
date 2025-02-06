@@ -9,7 +9,6 @@ const Navbar = () => {
     <header className="fixed top-0 z-40 w-full border-b border-base-300 bg-base-100/80 backdrop-blur-lg">
       <div className="container mx-auto h-16 px-4">
         <div className="flex h-full items-center justify-between">
-          {/* Logo and Brand */}
           <Link 
             to="/" 
             className="flex items-center gap-3 transition-all hover:opacity-80"
@@ -20,7 +19,6 @@ const Navbar = () => {
             <h1 className="text-xl font-bold tracking-tight">Kizuna</h1>
           </Link>
 
-          {/* Navigation Actions */}
           <nav className="flex items-center gap-3">
             <Link
               to="/settings"
