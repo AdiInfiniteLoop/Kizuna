@@ -50,6 +50,8 @@ export const getAllMessages = catchAsync(async(req: NRequest, res:Response, next
 
 export const sendMessage = catchAsync(async(req: NRequest, res:Response, next: NextFunction) => {
     const {text, image} = req.body;
+
+    //how to detect emojis here?
     const {id: receiverId} = req.params;
     const senderId = req.user._id;
     
