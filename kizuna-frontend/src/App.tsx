@@ -8,6 +8,8 @@ import Signup from './pages/Signup'
 import Profile from './pages/Profile'
 import { useAuthStore } from './store/useAuthStore'
 import { useEffect } from 'react'
+import {Toaster} from "react-hot-toast"
+
 
 import { Loader } from 'lucide-react'
 function App() {
@@ -29,7 +31,9 @@ function App() {
   return (
     <div>
       <Navbar/>
+      <Toaster position="top-center" />
       <Routes>
+
         <Route path='/' element={authUser ? <HomePage/> : <Navigate to='/login'/>} />
         <Route path='/signup' element={!authUser ? <Signup/>: <Navigate to='/login'/> } />
         <Route path='/login' element={!authUser ? <Login/> : <Navigate to='/login'/>} />

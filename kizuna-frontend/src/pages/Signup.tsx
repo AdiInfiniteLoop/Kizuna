@@ -2,9 +2,7 @@ import { useState } from "react"
 import { useAuthStore } from "../store/useAuthStore"
 import { Eye, EyeOff, Loader2, Lock, Mail, MessageSquare, User } from "lucide-react"
 import { Link } from "react-router-dom"
-
-// import AuthImagePattern from "../components/AuthImagePattern"
-import {Toaster, toast} from "react-hot-toast"
+import {toast} from "react-hot-toast"
 import SignupIllustration from "../components/SignupIllustration"
 
 const SignUpPage = () => {
@@ -52,7 +50,6 @@ const SignUpPage = () => {
 
   return (
     <div className="min-h-screen grid lg:grid-cols-3">
-      <Toaster position="top-center" />
 
       <div className="col-span-2 flex flex-col justify-center items-center p-6 md:p-12 bg-gradient-to-bl from-primary/15 to-secondary/15">
         <div className="w-full max-w-md space-y-8 bg-base-100 p-8 rounded-2xl shadow-xl">
@@ -82,7 +79,7 @@ const SignUpPage = () => {
                 <input
                   type="text"
                   className="input input-bordered w-full pl-10 bg-base-200 focus:bg-base-100 transition-colors duration-200"
-                  placeholder="Yout Full Name"
+                  placeholder="Your Full Name"
                   value={formData.fullName}
                   onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
                 />
