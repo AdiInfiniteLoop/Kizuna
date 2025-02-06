@@ -1,9 +1,13 @@
 import  {NextFunction, Request, Response}from "express";
 import { catchAsync } from "../utils/catchAsync.utils";
 import { ErrorClass } from "../utils/errorClass.utills";
-import User from "../models/userModel.models";
+import User, { UserInterface } from "../models/userModel.models";
 import { generateJWT } from "../utils/generateJWT.utils";
+import cloudinary from "../lib/cloudinary.lib";
 
+interface NRequest extends Request{
+    user: UserInterface
+}
 
 export const signup =  catchAsync(async(req: Request, res: Response, next: NextFunction) => {
     const {fullName, email, password} = req.body;
@@ -101,3 +105,41 @@ export const logout =  catchAsync(async(req: Request, res: Response, next: NextF
     }
     next()
 })
+
+//test later with frontend   
+export const updateProfile = catchAsync(async(req: NRequest, res: Response, next: NextFunction) => {
+    try {
+        const {profilePic} =  req.body;
+        const userId = req.user._id
+        // res.send('ds')
+        if(!profilePic) {
+            return next(new ErrorClass('Profile Pic is required', 400))
+        }
+    
+        const uploadRes = await cloudinary.uploader.upload(profilePic);
+    
+        const updatedUser = User.findByIdAndUpdate(userId, {profilePic: uploadRes.secure_url}, {new: true})
+    
+        res.status(200).json({status: 'Success', message: 'Image Uploaded Successfully', data: updatedUser})
+    }
+    catch(err: unknown) {
+        console.log(err)
+        if(err instanceof Error) {
+            return next(new ErrorClass(err.message,500))
+        }
+        else {
+            return next(new ErrorClass('An unknown error occured', 500))
+        }
+    }
+})
+
+export const checkAuth = (req: any, res: Response) => {
+    try {
+        res.status(200).json(req.user)
+        // console.log(req.user)
+    }
+    catch(err) {
+        console.log("Error occured in checkAuth controller");
+        res.status(500).json({message: 'Internal Server Error'})
+    }
+}

@@ -1,8 +1,11 @@
 import express from "express";
 import authRouter from './routes/auth.route'
 import { errorHandler } from "./controllers/globalErrorhandler";
-export const app = express();
+import cookieParser from 'cookie-parser'
 
+
+export const app = express();
+app.use(cookieParser())
 app.use(express.json())
 
 app.use('/api/auth', authRouter)

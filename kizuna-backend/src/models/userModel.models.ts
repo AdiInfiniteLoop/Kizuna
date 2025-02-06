@@ -2,7 +2,8 @@ import argon2  from "argon2";
 import mongoose from "mongoose";
 
 
-interface UserInterface extends Document {
+export interface UserInterface extends Document {
+    _id: mongoose.Types.ObjectId;
     email: string,
     fullName: string,
     password: string,
