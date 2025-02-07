@@ -20,7 +20,6 @@ export const protect = catchAsync(async(req: CustomRequest, res: Response, next:
         if (!decoded) {
         return next(new ErrorClass('Unauthorized - Invalid Token Provided', 401))
         }
-        console.log(decoded)
         if (typeof decoded !== 'object' || !decoded || !('userId' in decoded)) {
             return next(new ErrorClass('Unauthorized - Invalid Token Provided', 401));
         }

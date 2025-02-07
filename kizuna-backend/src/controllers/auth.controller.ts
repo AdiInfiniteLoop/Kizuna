@@ -11,7 +11,7 @@ export interface NRequest extends Request{
 
 export const signup =  catchAsync(async(req: NRequest, res: Response, next: NextFunction) => {
     const {fullName, email, password} = req.body;
-    if(!fullName || !email || !password) next(new ErrorClass('A fields must be filled', 400))
+    if(!fullName || !email || !password) next(new ErrorClass('All fields must be filled', 400))
     try {
         if(password.length < 8) {
             return next(new ErrorClass('A password must be atleast 8 characters', 400))
@@ -52,8 +52,8 @@ export const signup =  catchAsync(async(req: NRequest, res: Response, next: Next
 
 
 export const login =  catchAsync(async(req: NRequest, res: Response, next: NextFunction) => {
-    const {fullName, email, password} = req.body;
-    if(!fullName || !email || !password) next(new ErrorClass('A fields must be filled', 400))
+    const {email, password} = req.body;
+    if(!email || !password) next(new ErrorClass('All fields must be filled', 400))
     try {
         if(password.length < 8) {
             return next(new ErrorClass('A password must be atleast 8 characters', 400))
@@ -73,7 +73,8 @@ export const login =  catchAsync(async(req: NRequest, res: Response, next: NextF
         res.status(200).json(
             {
                 status: 'Success',
-                message: 'Logged In Successfully'
+                message: 'Logged In Successfully',
+                data: user
             }
         )
     }
@@ -118,7 +119,7 @@ export const updateProfile = catchAsync(async(req: NRequest, res: Response, next
     
         const uploadRes = await cloudinary.uploader.upload(profilePic);
     
-        const updatedUser = User.findByIdAndUpdate(userId, {profilePic: uploadRes.secure_url}, {new: true})
+        const updatedUser = await User.findByIdAndUpdate(userId, {profilePic: uploadRes.secure_url}, {new: true})
     
         res.status(200).json({status: 'Success', message: 'Image Uploaded Successfully', data: updatedUser})
     }
@@ -133,8 +134,8 @@ export const updateProfile = catchAsync(async(req: NRequest, res: Response, next
     }
 })
 
-export const checkAuth = (req: any, res: Response) => {
-    try {
+export const checkAuth = catchAsync(async(req: NRequest, res: Response, next: NextFunction) => {
+    try { 
         res.status(200).json(req.user)
         // console.log(req.user)
     }
@@ -142,4 +143,4 @@ export const checkAuth = (req: any, res: Response) => {
         console.log("Error occured in checkAuth controller");
         res.status(500).json({message: 'Internal Server Error'})
     }
-}
+})

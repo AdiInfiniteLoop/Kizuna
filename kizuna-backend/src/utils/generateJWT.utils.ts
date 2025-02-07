@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken";
 import { Response } from "express";
-import mongoose, { ObjectId } from "mongoose";
+import mongoose from "mongoose";
 
 export const generateJWT = (userId: number | string |  mongoose.Types.ObjectId, res: Response): string => {
   const secretKey = process.env.JWT_SECRET;

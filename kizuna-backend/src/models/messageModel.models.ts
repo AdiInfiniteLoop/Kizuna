@@ -1,4 +1,13 @@
-import mongoose from 'mongoose'
+import { Document, Types } from "mongoose";
+import mongoose from "mongoose";
+// export interface IMessage extends Document {
+//   senderId: Types.ObjectId;
+//   receiverId: Types.ObjectId;
+//   text?: string;
+//   image?: string;
+//   createdAt: Date;
+//   updatedAt: Date;
+// } check this
 
 const messageSchema = new mongoose.Schema({
     senderId: {
