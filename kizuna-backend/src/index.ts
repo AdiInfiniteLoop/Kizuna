@@ -18,7 +18,7 @@ app.use(cors({
 app.use('/api/auth', authRouter)
 app.use('/api/messages', messageRouter)
 
-console.log('hererer11')
+
 app.get('/', (req, res) => {
     res.send('Kizuna Backend Running...')
 })

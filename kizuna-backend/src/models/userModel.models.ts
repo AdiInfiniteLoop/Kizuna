@@ -8,6 +8,7 @@ export interface UserInterface extends Document {
     fullName: string,
     password: string,
     profilePic ?: string,
+    emailVerified: boolean;
     comparePassword(candidatePassword: string) : Promise<boolean>
 }
 
@@ -28,7 +29,8 @@ const UserSchema = new mongoose.Schema<UserInterface>({
     profilePic: {
         type: String,
         default:""
-    }
+    },
+    emailVerified: { type: Boolean, default: false },
 }, {
     timestamps: true
 })
@@ -37,6 +39,7 @@ UserSchema.pre('save', async function(next) {
     if(!this.isModified) return next();
     try {  
         if(this.password) {
+            
             const hashedPassword = await argon2.hash(this.password)
             this.password = hashedPassword
         }
@@ -49,7 +52,10 @@ UserSchema.pre('save', async function(next) {
 
 
 UserSchema.methods.comparePassword = async function(candidatePassword: string) {
-    return await argon2.verify(this.password, candidatePassword)
+    console.log(candidatePassword," candidate password")
+    const val =  await argon2.verify(this.password, candidatePassword)
+    console.log(val);
+    return val;
 }
 
 const User = mongoose.model("User", UserSchema)
