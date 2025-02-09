@@ -32,7 +32,7 @@ type Store = {
   disconnectSocket: () => void;
 };
 
-const BE_URL = 'http://192.168.1.6:3000';
+const BE_URL = 'https://kizuna.onrender.com/';
 
 export const useAuthStore = create<Store>((set, get) => ({
   authUser: null,
