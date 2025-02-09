@@ -30,7 +30,7 @@ export const signup = catchAsync(async (req: NRequest, res: Response, next: Next
 
 
         const otp = generateOTP();
-        const OTP_EXPIRY = 500
+        const OTP_EXPIRY = 120;     //2 mins 
         await client.setex(email, OTP_EXPIRY, otp) 
 
         await sendEmail({

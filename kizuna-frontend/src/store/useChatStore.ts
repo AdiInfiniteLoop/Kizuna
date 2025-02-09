@@ -95,7 +95,7 @@ export const useChatStore = create<ChatStoreInterface>((set, get) => ({
         if( msg === 'request entity too large') {
             msg = 'Try sending a smaller image please'
         }
-        toast.error(msg || "Something went wrong");
+        toast.error(msg || "Try sending a smaller image please");
       } else {
         toast.error("An unexpected error occurred");
       }

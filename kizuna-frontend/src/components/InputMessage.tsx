@@ -12,7 +12,7 @@ const MessageInput = () => {
   const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
-
+    
     if (!file.type.startsWith("image/")) {
       toast.error("Please select an image file");
       return;
@@ -39,7 +39,6 @@ const MessageInput = () => {
         text: text.trim(),
         image: imagePreview,
       });
-
       // Clear form
       setText("");
       setImagePreview(null);
@@ -69,7 +68,6 @@ const MessageInput = () => {
           </div>
         </div>
       )}
-
       <form onSubmit={handleSendMessage} className="flex items-center gap-2">
         <div className="flex-1 flex gap-2">
           <input
@@ -86,10 +84,11 @@ const MessageInput = () => {
             ref={fileInputRef}
             onChange={handleImageChange}
           />
-
           <button
             type="button"
-            className={`hidden sm:flex btn btn-circle ${imagePreview ? "text-emerald-500" : "text-zinc-400"}`}
+            className={`flex btn btn-circle ${
+              imagePreview ? "text-emerald-500" : "text-zinc-400"
+            }`}
             onClick={() => fileInputRef.current?.click()}
           >
             <Image size={20} />

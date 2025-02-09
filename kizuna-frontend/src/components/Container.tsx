@@ -7,6 +7,7 @@ import MessageSkeleton from "./MessagesSkeleton";
 import { useAuthStore } from "../store/useAuthStore";
 import { formatMessageTime } from "../lib/formatTime";
 import { MessageInterface } from "../store/useChatStore";
+import { Loader } from "lucide-react";
 
 export const Container = () => {
   const {
@@ -26,7 +27,12 @@ export const Container = () => {
     subscribeToMessages();
 
     return () => unsubscribeFromMessages();
-  }, [selectedUser?._id, getMessages, subscribeToMessages, unsubscribeFromMessages]);
+  }, [
+    selectedUser?._id,
+    getMessages,
+    subscribeToMessages,
+    unsubscribeFromMessages,
+  ]);
 
   useEffect(() => {
     if (messageEndRef.current && messages) {
@@ -43,19 +49,28 @@ export const Container = () => {
       </div>
     );
   }
-  console.log(authUser, "atuh user")
-  if (!authUser) return <div>Loading...</div>;
-  
+
+  if (!authUser) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <Loader className="size-10 animate-spin" />
+      </div>
+    );
+  }
+
   return (
     <div className="flex-1 flex flex-col overflow-auto">
       <ChatHeader />
 
       <div className="flex-1 overflow-y-auto p-4 space-y-4">
-        {messages.map((message: MessageInterface) => 
-        (
+        {messages.map((message: MessageInterface) => (
           <div
             key={message._id}
-            className={`chat ${authUser && message.senderId === authUser._id ? "chat-end" : "chat-start"}`}
+            className={`chat ${
+              authUser && message.senderId === authUser._id
+                ? "chat-end"
+                : "chat-start"
+            }`}
             ref={messageEndRef}
           >
             <div className="chat-image avatar">
@@ -80,7 +95,7 @@ export const Container = () => {
                 <img
                   src={message.image}
                   alt="Attachment"
-                  className="sm:max-w-[200px] rounded-md mb-2"
+                  className="max-w-[200px] rounded-md mb-2"
                 />
               )}
               {message.text && <p>{message.text}</p>}
