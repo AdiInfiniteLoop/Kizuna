@@ -1,15 +1,19 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useAuthStore } from "../store/useAuthStore"
 import { Eye, EyeOff, Loader2, Lock, Mail, MessageSquare, User, X } from "lucide-react"
 import { Link } from "react-router-dom"
 import { toast } from "react-hot-toast"
 import SignupIllustration from "../components/SignupIllustration"
 
+const OTP_EXPIRY_SECONDS = 120;
+
 const SignUpPage = () => {
   const [showPassword, setShowPassword] = useState(false)
   const [showOtpModal, setShowOtpModal] = useState(false)
   const [otp, setOtp] = useState(["", "", "", "", "", ""])
   const [isVerifying, setIsVerifying] = useState(false)
+  const [timeRemaining, setTimeRemaining] = useState(OTP_EXPIRY_SECONDS)
+  const [isExpired, setIsExpired] = useState(false)
   const [formData, setFormData] = useState({
     fullName: "",
     email: "",
@@ -17,6 +21,38 @@ const SignUpPage = () => {
   })
 
   const { signup, isSigningUp, verifyOTP } = useAuthStore()
+
+  useEffect(() => {
+    let timer: number
+    
+    if (showOtpModal && timeRemaining > 0) {
+      timer = setInterval(() => {
+        setTimeRemaining((prev) => {
+          if (prev <= 1) {
+            clearInterval(timer);
+            setIsExpired(true);
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+    }
+
+    return () => {
+      if (timer) clearInterval(timer);
+    };
+  }, [showOtpModal, timeRemaining]);
+
+  const formatTime = (seconds: number): string => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins}:${secs.toString().padStart(2, '0')}`;
+  };
+
+  const resetTimer = () => {
+    setTimeRemaining(OTP_EXPIRY_SECONDS);
+    setIsExpired(false);
+  };
 
   const validateForm = () => {
     if (!formData.fullName.trim()) {
@@ -49,6 +85,7 @@ const SignUpPage = () => {
       try {
         await signup(formData);
         setShowOtpModal(true);
+        resetTimer();
       } catch (error) {
         console.log(error)
         setShowOtpModal(false);
@@ -70,6 +107,11 @@ const SignUpPage = () => {
   };
 
   const handleVerifyOtp = async () => {
+    if (isExpired) {
+      toast.error("OTP has expired. Please request a new one.");
+      return;
+    }
+
     const otpString = otp.join("");
     if (otpString.length !== 6) {
       toast.error("Please enter complete OTP");
@@ -91,6 +133,8 @@ const SignUpPage = () => {
   const handleResendOtp = async () => {
     try {
       await signup(formData);
+      resetTimer();
+      setOtp(["", "", "", "", "", ""]);
       toast.success("New verification code sent!");
     } catch (error) {
       console.log(error)
@@ -233,6 +277,9 @@ const SignUpPage = () => {
               <p className="text-base-content/70 mt-2">
                 We've sent a 6-digit verification code to {formData.email}
               </p>
+              <p className={`text-sm mt-2 ${isExpired ? 'text-error' : 'text-primary'}`}>
+                Time remaining: {formatTime(timeRemaining)}
+              </p>
             </div>
 
             <div className="flex justify-center gap-2">
@@ -246,9 +293,11 @@ const SignUpPage = () => {
                   maxLength={1}
                   value={digit}
                   onChange={(e) => handleOtpChange(index, e.target.value)}
-                  className="w-12 h-12 text-center text-xl rounded-lg border border-base-300 
-                    bg-base-200 focus:bg-base-100 focus:border-primary focus:ring-2 
-                    focus:ring-primary/20 transition-all duration-200 outline-none"
+                  className={`w-12 h-12 text-center text-xl rounded-lg border 
+                    ${isExpired ? 'border-error/50 bg-error/10' : 'border-base-300 bg-base-200'} 
+                    focus:bg-base-100 focus:border-primary focus:ring-2 
+                    focus:ring-primary/20 transition-all duration-200 outline-none`}
+                  disabled={isExpired}
                 />
               ))}
             </div>
@@ -259,13 +308,13 @@ const SignUpPage = () => {
                 className="text-sm text-primary hover:text-secondary transition-colors duration-300"
                 onClick={handleResendOtp}
               >
-                Resend Code
+                {isExpired ? 'Request New Code' : 'Resend Code'}
               </button>
               <button
                 type="button"
                 className="btn btn-primary hover:btn-secondary transition-colors duration-300"
                 onClick={handleVerifyOtp}
-                disabled={isVerifying}
+                disabled={isVerifying || isExpired}
               >
                 {isVerifying ? (
                   <>
