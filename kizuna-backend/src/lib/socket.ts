@@ -6,7 +6,6 @@ const app = express();
 const server = http.createServer(app);
 
 const userTOSocketMap: Record<string, string> = {};  
-
 const io = new Server(server, {
     cors: {
         origin: [
