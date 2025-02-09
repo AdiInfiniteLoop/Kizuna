@@ -13,7 +13,6 @@
   "description": "",
   "devDependencies": {
     "@types/cookie-parser": "^1.4.8",
-
     "@types/jsonwebtoken": "^9.0.8",
     "@types/nodemailer": "^6.4.17",
     "jsonwebtoken": "^9.0.2",
