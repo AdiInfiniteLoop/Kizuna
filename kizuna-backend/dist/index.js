@@ -23,13 +23,26 @@ socket_1.app.use((0, helmet_1.default)());
 socket_1.app.use((0, express_mongo_sanitize_1.default)());
 socket_1.app.use((0, cookie_parser_1.default)());
 socket_1.app.use(express_1.default.json());
+const allowedOrigins = [
+    process.env.FRONTEND_URL,
+    'https://kizuna-ten.vercel.app'
+];
 socket_1.app.use((0, cors_1.default)({
-    origin: process.env.FRONTEND_URL,
+    origin: (origin, callback) => {
+        console.log('Request from origin:', origin); // Add this to debug
+        if (allowedOrigins.includes(origin) || !origin) {
+            callback(null, true);
+        }
+        else {
+            console.log('Blocked origin:', origin); // Add this to debug
+            callback(new Error('CORS not allowed'));
+        }
+    },
     credentials: true
 }));
 socket_1.app.use('/api/auth', auth_route_1.default);
 socket_1.app.use('/api/messages', message_route_1.default);
-socket_1.app.get('/', (_req, res) => {
+socket_1.app.get('/', (req, res) => {
     res.send('Kizuna Backend Running...');
 });
 socket_1.app.use(globalErrorhandler_1.errorHandler);

@@ -23,27 +23,36 @@ app.use(mongoSanitize())
 
 app.use(cookieParser())
 app.use(express.json())
+  
+
+
+
 const allowedOrigins = [
-  process.env.FRONTEND_URL, 
-  'https://kizuna-ten.vercel.app/', 
+  process.env.FRONTEND_URL,
+  'https://kizuna-ten.vercel.app'
 ];
 
 app.use(cors({
-    origin: (origin, callback) => {
-        if (allowedOrigins.includes(origin) || !origin) {
-            callback(null, true); // Allow the request
-        } else {
-            callback(new Error('CORS not allowed'), false); // Reject the request
-        }
-    },
-    credentials: true, // Allow credentials (cookies, authorization headers)
+  origin: (origin, callback) => {
+    console.log('Request from origin:', origin); // Add this to debug
+    
+    if (allowedOrigins.includes(origin) || !origin) {
+      callback(null, true);
+    } else {
+      console.log('Blocked origin:', origin); // Add this to debug
+      callback(new Error('CORS not allowed'));
+    }
+  },
+  credentials: true
 }));
+
+
 
 app.use('/api/auth', authRouter)
 app.use('/api/messages', messageRouter)
 
 
-app.get('/', (_req, res) => {
+app.get('/', (req: Request, res: Response) => {
     res.send('Kizuna Backend Running...')
 })
 app.use(errorHandler)
