@@ -6,6 +6,7 @@ import { generateJWT } from "../utils/generateJWT.utils";
 import cloudinary from "../lib/cloudinary.lib";
 import { sendEmail } from "../utils/email";
 import { generateOTP} from "../utils/generateOTP";
+import client from "../lib/redis";
 
 
 export interface NRequest extends Request{
@@ -13,12 +14,10 @@ export interface NRequest extends Request{
 }
 
 
-let otpStorage: Record<string, string> = {}; // Temporary in-memory OTP storage (use redis for persistent storage in production)
 
 export const signup = catchAsync(async (req: NRequest, res: Response, next: NextFunction) => {
     const { fullName, email, password } = req.body;
     if (!fullName || !email || !password) return next(new ErrorClass('All fields must be filled', 400));
-    console.log("req body is", req.body)
     try {
         if (password.length < 8) {
             return next(new ErrorClass('A password must be atleast 8 characters', 400));
@@ -29,9 +28,10 @@ export const signup = catchAsync(async (req: NRequest, res: Response, next: Next
             return next(new ErrorClass('A user already exists with the provided email', 400));
         }
 
-  
+
         const otp = generateOTP();
-        otpStorage[email] = otp; 
+        const OTP_EXPIRY = 500
+        await client.setex(email, OTP_EXPIRY, otp) 
 
         await sendEmail({
             email: email,
@@ -111,7 +111,6 @@ export const updateProfile = catchAsync(async(req: NRequest, res: Response, next
     try {
         const {profilePic} =  req.body;
         const userId = req.user._id
-        // res.send('ds')
         if(!profilePic) {
             return next(new ErrorClass('Profile Pic is required', 400))
         }
@@ -136,7 +135,6 @@ export const updateProfile = catchAsync(async(req: NRequest, res: Response, next
 export const checkAuth = catchAsync(async(req: NRequest, res: Response, next: NextFunction) => {
     try { 
         res.status(200).json(req.user)
-        // console.log(req.user)
     }
     catch(err) {
         console.log("Error occured in checkAuth controller");
@@ -150,16 +148,16 @@ export const verifyOTP = catchAsync(async (req: NRequest, res: Response, next: N
     if (!email || !otp) {
         return next(new ErrorClass('Email and OTP must be provided', 400));
     }
+    
+    const cachedOTP = await client.get(email)
 
-    if (otpStorage[email] !== otp) {
+
+    if (cachedOTP !== otp) {
         return next(new ErrorClass('Invalid OTP or OTP has expired', 400));
     }
-    console.log(otp)
     const newUser = await User.create({ ...req.body, emailVerified: true }); 
-    console.log("enw user", newUser)
     const token = generateJWT(newUser._id, res);
-    console.log(token, " toke fgemn")
-    delete otpStorage[email];
+    await client.del(email);
 
     res.status(200).json({
         status: 'Success',

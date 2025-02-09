@@ -1,4 +1,4 @@
-import express from "express";
+import express, { Request, Response } from "express";
 import authRouter from './routes/auth.route'
 import messageRouter from './routes/message.route'
 import { errorHandler } from "./controllers/globalErrorhandler";
@@ -19,11 +19,10 @@ app.use('/api/auth', authRouter)
 app.use('/api/messages', messageRouter)
 
 
-app.get('/', (req, res) => {
+app.get('/', (_req, res) => {
     res.send('Kizuna Backend Running...')
 })
 app.use(errorHandler)
-
 //---server start logic ----
 import dotenv from "dotenv"; // Load .env before anything else always
 dotenv.config();
