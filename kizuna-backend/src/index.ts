@@ -41,7 +41,6 @@ import dotenv from "dotenv";
 dotenv.config();
 import {  server } from "./lib/socket";
 import { connectDb } from "./lib/db.lib"
-import ExpressMongoSanitize, { sanitize } from "express-mongo-sanitize";
 
 const port = process.env.DEV_PORT
 
