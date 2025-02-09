@@ -23,11 +23,21 @@ app.use(mongoSanitize())
 
 app.use(cookieParser())
 app.use(express.json())
-app.use(cors({
-    origin: process.env.FRONTEND_URL,
-    credentials: true
-}))
+const allowedOrigins = [
+  process.env.FRONTEND_URL, 
+  'https://kizuna-ten.vercel.app/', 
+];
 
+app.use(cors({
+    origin: (origin, callback) => {
+        if (allowedOrigins.includes(origin) || !origin) {
+            callback(null, true); // Allow the request
+        } else {
+            callback(new Error('CORS not allowed'), false); // Reject the request
+        }
+    },
+    credentials: true, // Allow credentials (cookies, authorization headers)
+}));
 
 app.use('/api/auth', authRouter)
 app.use('/api/messages', messageRouter)
