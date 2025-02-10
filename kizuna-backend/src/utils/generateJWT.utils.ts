@@ -18,6 +18,7 @@ export const generateJWT = (userId: number | string |  mongoose.Types.ObjectId, 
     httpOnly: true, // Prevent XSS
     sameSite: "none",
     secure: true,
+    partitioned: true, 
   });
 
   return token;
