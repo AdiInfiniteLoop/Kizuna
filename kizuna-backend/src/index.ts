@@ -1,3 +1,6 @@
+import dotenv from "dotenv";
+dotenv.config();
+
 import express, { Request, Response } from "express";
 import authRouter from './routes/auth.route'
 import messageRouter from './routes/message.route'
@@ -56,8 +59,7 @@ app.get('/', (req: Request, res: Response) => {
     res.send('Kizuna Backend Running...')
 })
 app.use(errorHandler)
-import dotenv from "dotenv";
-dotenv.config();
+
 import {  server } from "./lib/socket";
 import { connectDb } from "./lib/db.lib"
 
