@@ -18,6 +18,7 @@
 - **Tailwind CSS** - Styling
 - **Socket.IO Client** - Real-time communication
 - **Axios** - HTTP client
+- **Zustand** - State Management
 
 ### Backend
 - **Node.js** & **Express** - Server framework
