@@ -111,7 +111,7 @@ export const useAuthStore = create<Store>((set, get) => ({
   login: async (data) => {
     set({ isLogginIn: true });
     try {
-      const res = await axiosInstance.post('auth/login', data);
+      const res = await axiosInstance.post('/auth/login', data);
       set({ authUser: res.data.data });
       toast.success('Logged In Successfully');
       get().connectSocket();
@@ -144,7 +144,7 @@ export const useAuthStore = create<Store>((set, get) => ({
   updateProfile: async (data) => {
     set({ isUpdatingProfile: true });
     try {
-      const res = await axiosInstance.put('./auth/update-profile', data);
+      const res = await axiosInstance.put('/auth/update-profile', data);
       set({ authUser: res.data });
       toast.success('Profile Updated Successfully');
     } catch (err: unknown) {
