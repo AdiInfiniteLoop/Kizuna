@@ -1,7 +1,7 @@
 # **Kizuna: Real-Time Chat Platform**
+![Kizuna Logo](./kizuna-frontend/public/kizuna-logo.png)
 
 **Kizuna** is a feature-rich chat application built for seamless real-time communication. Powered by the **MERN** stack (MongoDB, Express, React, Node.js) with **Redis** caching and **Cloudinary** media handling, Kizuna delivers a responsive and scalable messaging experience.
-![Kizuna Logo](./kizuna-frontend/public/kizuna-logo.png)
 
 ## **Key Features**
 
