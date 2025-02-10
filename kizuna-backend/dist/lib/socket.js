@@ -16,7 +16,7 @@ const userTOSocketMap = {};
 const io = new socket_io_1.Server(server, {
     cors: {
         origin: [
-            'http://192.168.1.6:5173'
+            'https://kizuna-ten.vercel.app/'
         ]
     }
 });

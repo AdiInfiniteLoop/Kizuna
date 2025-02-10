@@ -9,8 +9,9 @@ const userTOSocketMap: Record<string, string> = {};
 const io = new Server(server, {
     cors: {
         origin: [
-            'https://kizuna-ten.vercel.app/' 
-        ]
+            'https://kizuna-ten.vercel.app' 
+        ],
+        credentials: true
     }
 });
 
